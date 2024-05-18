@@ -215,10 +215,9 @@ fig_sp2
 require(akima)
 require(rgl)
 
-rdn<-c(1:34)
-tdn<-c(1:34)
-nrow(lens_450)
-ncol(lens_450)
+tdn<-c(1:nrow(z_50_650))
+rdn<-c(1:ncol(z_50_650))
+
 plot.new()
 frame()
 options(warn=-1) # 경고메세지 무시하기
@@ -252,15 +251,18 @@ for (i in 1:length(file_list)){
 plot.new()
 filled.contour(x=tdn,
                y=rdn,
-               z=as.matrix(eval(parse(text=paste0("lens_", 430+20*i)))),
+               z=as.matrix(z_50_650),
                color.palette=colorRampPalette(c("blue","yellow","red")),
-               plot.title=title(main=paste0("Transmittance as wavelength, λ = ",430+i*20, "nm") , sub="Z = 5.4mm",
+               plot.title=title(main=paste0("Transmittance as wavelength, λ = 650nm") , sub="Z = 5.0, 5.3, 5.6mm",
                                 xlab="", ylab=""),
                nlevels=50,
                plot.axes = { axis(side = 1, at = tdn, labels = tdn, col.lab="white")
                  axis(side = 2, at = rdn, labels = rdn, col.lab="white") },
                key.title=title(main="T(%)"),
                key.axes = axis(4, seq(0, 8, by = 0.1)))
+
+
+
 abline(h=25,v=6, col = "red", lty = 2)
 library(tidyverse)
 
@@ -410,13 +412,14 @@ par(fg = NA,col="black")
 dev.off()
 5%/%3
 
-for (i in seq(3, 21, by = 3)){
+ 
+for (i in c(1:3)){
 
   png(paste0(substr(file_list[i], 1, 8), ".png"), pointsize=10, width=3800, height=3400, res=600)
 
-  filled.contour(x=rdn,
+  p[i] <- filled.contour(x=rdn,
                    y=tdn,
-                   z=as.matrix(eval(parse(text=paste0("z_", 50+i%/%3, "_650")))),
+                   z=as.matrix(eval(parse(text=paste0("z_", 47+3*i, "_650")))),
   color.palette=colorRampPalette(c("blue","yellow","red")),
   plot.title=title(main=paste0("Transmittance as z, z=", substr(file_list[i], 3, 4), "mm") ,
                    sub= paste0("λ =",substr(file_list[i], 6, 8) ) ,
